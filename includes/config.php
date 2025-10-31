@@ -4,6 +4,8 @@ session_start();
 define('SITE_NAME', 'BuyBit');
 define('SITE_URL', 'http://localhost/buybit');
 
+require_once 'auth.php';
+
 require_once 'database.php';
 $database = new Database();
 $db = $database->getConnection();
