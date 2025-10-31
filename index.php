@@ -19,7 +19,7 @@ $categories = getAllCategories($db);
             <div class="logo">BuyBit</div>
             <ul class="nav-links">
                 <li><a href="index.php">Главная</a></li>
-                <li><a href="pages/pruducts.php">Товары</a></li>
+                <li><a href="pages/products.php">Товары</a></li>
                 <li><a href="pages/cart.php">Корзина</a></li>
                 <?php if (isLoggedIn()): ?>
                     <li><a href="pages/profile.php">Профиль</a></li>

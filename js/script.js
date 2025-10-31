@@ -1,10 +1,10 @@
-function addToCart(productId) {
+function addToCart(productId, quantity = 1) {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   const existingItem = cart.find((item) => item.id === productId);
 
   if (existingItem) {
-    existingItem.quantity += 1;
+    existingItem.quantity += quantity;
   } else {
     cart.push({
       id: productId,
@@ -21,24 +21,22 @@ function updateCartCounter() {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  let counter = document.querySelector(".cart-counter");
-  if (!counter) {
-    const nav = document.querySelector(".nav-links");
-    const cartLink = Array.from(nav.children).find((li) =>
-      li.querySelector('a[href*="cart.php"]')
-    );
+  const counters = document.querySelectorAll(".cart-counter");
+  counters.forEach(counter => {
+    counter.textContent = `(${totalItems})`;
+  });
 
-    if (cartLink) {
-      counter = document.createElement("span");
-      counter.className = "cart-counter";
-      cartLink.appendChild(counter);
-    }
-  }
-
-  if (counter) {
-    counter.textContent = ` (${totalItems})`;
-    counter.style.color = "#e74c3c";
-    counter.style.fontWeight = "bold";
+  if (counters.length === 0) {
+    const cartLinks = document.querySelectorAll('a[href*="cart.php"]');
+    cartLinks.forEach(link => {
+      if (!link.querySelector('.cart-counter')) {
+        const counter = document.createElement('span');
+        counter.className = 'cart-counter';
+        counter.textContent = `(${totalItems})`;
+        counter.style.cssText = 'color: #e74c3c; font-weight: bold; margin-left: 0.25rem;';
+        link.appendChild(counter)
+      }
+    })
   }
 }
 
