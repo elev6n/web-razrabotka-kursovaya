@@ -111,57 +111,98 @@ function displayCartCounter(count) {
   }
 }
 
-function showNotification(message, type = 'success') {
-    const existingNotifications = document.querySelectorAll('.notification');
-    existingNotifications.forEach(notification => notification.remove());
+function showNotification(message, type = "success", duration = 3000) {
+  // Удаляем существующие уведомления
+  const existingNotifications = document.querySelectorAll(".notification");
+  existingNotifications.forEach((notification) => {
+    notification.remove();
+  });
 
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    
-    const icon = type === 'success' ? '✅' : '❌';
-    notification.innerHTML = `
-        <span class="notification-icon">${icon}</span>
-        <span class="notification-text">${message}</span>
+  const notification = document.createElement("div");
+  notification.className = `notification notification-${type}`;
+  notification.innerHTML = `
+        <span>${message}</span>
+        <button class="notification-close" onclick="this.parentElement.remove()">×</button>
     `;
-    
-    notification.style.cssText = `
+
+  notification.style.cssText = `
         position: fixed;
         top: 20px;
         right: 20px;
-        background: ${type === 'success' ? '#2ecc71' : '#e74c3c'};
+        background: ${getNotificationColor(type)};
         color: white;
         padding: 1rem 1.5rem;
         border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         z-index: 10000;
-        animation: slideIn 0.3s ease;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        min-width: 300px;
-        max-width: 500px;
+        gap: 1rem;
+        animation: slideInRight 0.3s ease;
+        max-width: 400px;
     `;
 
-    document.body.appendChild(notification);
+  const closeBtn = notification.querySelector(".notification-close");
+  closeBtn.style.cssText = `
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    `;
 
-    setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
-            }
-        }, 300);
-    }, 3000);
-    
-    notification.addEventListener('click', () => {
-        notification.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
-            }
-        }, 300);
-    });
+  document.body.appendChild(notification);
+
+  // Автоматическое удаление
+  setTimeout(() => {
+    if (notification.parentElement) {
+      notification.style.animation = "slideOutRight 0.3s ease";
+      setTimeout(() => notification.remove(), 300);
+    }
+  }, duration);
 }
+
+function getNotificationColor(type) {
+  const colors = {
+    success: "#27ae60",
+    error: "#e74c3c",
+    warning: "#f39c12",
+    info: "#3498db",
+  };
+  return colors[type] || colors.info;
+}
+
+const style = document.createElement("style");
+style.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
 
 // Функции для работы с избранным
 function addToWishlist(productId) {

@@ -87,7 +87,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </main>
 
     <footer>
-        <p>&copy; 2025 BuyBit. Все права защищены.</p>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>BuyBit</h3>
+                <p>Лучший выбор компьютерных товаров по доступным ценам.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Категории</h3>
+                <ul>
+                    <?php foreach (getAllCategories($db) as $category): ?>
+                    <li><a href="pages/products.php?category=<?php echo $category['id']; ?>"><?php echo htmlspecialchars($category['name']); ?></a></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Помощь</h3>
+                <ul>
+                    <li><a href="#">Доставка и оплата</a></li>
+                    <li><a href="#">Гарантия</a></li>
+                    <li><a href="#">Контакты</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 BuyBit. Все права защищены. Курсовой проект по веб-разработке.</p>
+        </div>
     </footer>
 
     <script src="../js/auth.js"></script>

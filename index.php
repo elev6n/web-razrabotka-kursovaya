@@ -53,36 +53,61 @@ $categories = getAllCategories($db);
             </div>
         </section>
 
-        <section class="featured-products">
-            <h2>Популярные товары</h2>
-            <div class="products-grid">
-                <?php foreach (array_slice($products, 0, 6) as $product): ?>
-                <div class="products-card">
-                    <div class="product-image">
-                        <img src="<?php echo $product['image'] ? 'images/' . $product['image'] : 'images/placeholder.png'; ?>"
-                             alt="<?php echo htmlspecialchars($product['name']); ?>">
+        <section class="features">
+            <div class="container">
+                <h2>Почему выбирают BuyBit?</h2>
+                <div class="features-grid">
+                    <div class="feature-card" id="delivery">
+                        <div class="feature-icon">🚚</div>
+                        <h3>Бесплатная доставка</h3>
+                        <p>Бесплатная доставка при заказе от 10 000 ₽</p>
                     </div>
-                    <div class="product-info">
-                        <h3><?php echo htmlspecialchars($product['name']); ?></h3>
-                        <p class="product-category"><?php echo htmlspecialchars($product['category_name']); ?></p>
-                        <p class="product-price"><?php echo number_format($product['price'], 0, ',', ' '); ?></p>
-                        <div class="product-actions">
-                            <a href="pages/product.php?id=<?php echo $product['id']; ?>" class="btn">
-                                Подробнее
-                            </a>
-                            <button class="btn btn-primary" onclick="addToCart(<?php echo $product['id']; ?>)">
-                                В корзину
-                            </button>
-                        </div>
+                    <div class="feature-card" id="warranty">
+                        <div class="feature-icon">🔧</div>
+                        <h3>Гарантия качества</h3>
+                        <p>Все товары проходят тщательную проверку</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💳</div>
+                        <h3>Удобная оплата</h3>
+                        <p>Оплата картой, наличными или онлайн</p>
+                    </div>
+                    <div class="feature-card" id="support">
+                        <div class="feature-icon">📞</div>
+                        <h3>Поддержка 24/7</h3>
+                        <p>Всегда готовы помочь с выбором</p>
                     </div>
                 </div>
-                <?php endforeach; ?>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 BuyBit. Все права защищены.</p>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>BuyBit</h3>
+                <p>Лучший выбор компьютерных товаров по доступным ценам.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Категории</h3>
+                <ul>
+                    <?php foreach (getAllCategories($db) as $category): ?>
+                    <li><a href="pages/products.php?category=<?php echo $category['id']; ?>"><?php echo htmlspecialchars($category['name']); ?></a></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Помощь</h3>
+                <ul>
+                    <li><a href="#delivery">Доставка и оплата</a></li>
+                    <li><a href="#warranty">Гарантия</a></li>
+                    <li><a href="#support">Контакты</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 BuyBit. Все права защищены. Курсовой проект по веб-разработке.</p>
+        </div>
     </footer>
 
     <script src="js/script.js"></script>
