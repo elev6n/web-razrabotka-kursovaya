@@ -80,18 +80,21 @@
 ## Структура проекта
 ```
 buybit/
-├── index.php # Главная страница
 ├── css/ # Стили
-├── js/ # JavaScript
 ├── images/ # Изображения
-├── pages/ # Страницы
 ├── includes/ # PHP includes
-│ ├── config.php # Конфигурация
+│ ├── api/404.php # Обработка ошибки 404
 │ ├── auth.php # Аутентификация
+│ ├── cart_actions.php # Управление корзиной
+│ ├── config.php # Конфигурация
 │ ├── database.php # База данных
-│ └── functions.php # Функции
-└── sql/
-└── database.sql # Структура БД
+│ ├── functions.php # Функции
+│ ├── logout.php # Выход
+│ └── wishlist_actions.php # Управление списком избранного
+├── js/ # JavaScript
+├── pages/ # Страницы
+├── sql/database.sql # Структура БД
+└── index.php # Главная страница
 ```
 
 ## Разработчик
