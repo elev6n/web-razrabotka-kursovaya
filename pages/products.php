@@ -3,6 +3,11 @@ require_once '../includes/config.php';
 
 $category_id = isset($_GET['category']) ? intval($_GET['category']) : null;
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+if ($category_id && !isValidCategory($db, $category_id)) {
+    redirectTo404();
+}
+
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $limit = 9;
 $offset = ($page - 1) * $limit;

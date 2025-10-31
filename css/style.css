@@ -430,7 +430,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 60vh;
+    min-height: 70vh;
     padding: 2rem;
 }
 
@@ -438,32 +438,107 @@ footer {
     text-align: center;
     background: white;
     padding: 3rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
     max-width: 500px;
     width: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
-.error-content h1 {
-    font-size: 6rem;
+.error-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #e74c3c, #3498db);
+}
+
+.error-code {
+    font-size: 8rem;
+    font-weight: bold;
     color: #e74c3c;
     margin-bottom: 1rem;
     line-height: 1;
+    text-shadow: 2px 2px 0 #f8f9fa;
 }
 
-.error-content h2 {
+.error-title {
+    font-size: 2rem;
     color: #2c3e50;
     margin-bottom: 1rem;
 }
 
-.error-content p {
+.error-description {
     color: #7f8c8d;
     margin-bottom: 2rem;
     font-size: 1.1rem;
+    line-height: 1.6;
 }
 
 .error-actions {
     display: flex;
     gap: 1rem;
     justify-content: center;
+    flex-wrap: wrap;
+}
+
+.suggestions {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+}
+
+.suggestions h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.suggestions-list {
+    list-style: none;
+    text-align: left;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.suggestions-list li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.suggestions-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: #3498db;
+}
+
+.suggestions-list a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.suggestions-list a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .error-code {
+        font-size: 6rem;
+    }
+
+    .error-title {
+        font-size: 1.5rem;
+    }
+
+    .error-actions {
+        flex-direction: column;
+    }
+
+    .error-actions .btn {
+        width: 100%;
+    }
 }

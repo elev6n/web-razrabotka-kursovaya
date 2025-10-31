@@ -2,16 +2,14 @@
 require_once '../includes/config.php';
 
 if (!isset($_GET['id'])) {
-    header("Location: products.php");
-    exit;
+    redirectTo404();
 }
 
 $product_id = intval($_GET['id']);
 $product = getProductById($db, $product_id);
 
 if (!$product) {
-    header("Location: products.php");
-    exit;
+    redirectTo404();
 }
 
 $similar_products_query = "SELECT p.*, c.name as category_name 
@@ -180,17 +178,6 @@ $similar_products = $similar_stmt->fetchAll(PDO::FETCH_ASSOC);
         const quantity = document.getElementById('quantity').value;
         addToCart(productId, parseInt(quantity));
     }
-    
-    // function addToWishlist(productId) {
-    //     let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-    //     if (!wishlist.includes(productId)) {
-    //         wishlist.push(productId);
-    //         localStorage.setItem('wishlist', JSON.stringify(wishlist));
-    //         showNotification('Товар добавлен в избранное!');
-    //     } else {
-    //         showNotification('Товар уже в избранном', 'error');
-    //     }
-    // }
     </script>
 </body>
 </html>

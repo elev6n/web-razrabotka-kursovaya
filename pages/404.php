@@ -1,5 +1,7 @@
 <?php
 require_once '../includes/config.php';
+
+http_response_code(404);
 ?>
 
 <!DOCTYPE html>
@@ -32,12 +34,37 @@ require_once '../includes/config.php';
     <main>
         <div class="error-page">
             <div class="error-content">
-                <h1>404</h1>
-                <h2>Страница не найдена</h2>
-                <p>Извините, но страница, которую вы ищете, не существует.</p>
+                <div class="error-code">404</div>
+                <h1 class="error-title">Страница не найдена</h1>
+                <p class="error-description">
+                    Извините, но страница, которую вы ищете, не существует.<br>
+                    Возможно, она была перемещена или удалена.
+                </p>
+                
                 <div class="error-actions">
-                    <a href="../index.php" class="btn btn-primary">На главную</a>
-                    <a href="products.php" class="btn btn-outline">К товарам</a>
+                    <a href="../index.php" class="btn btn-primary">
+                        🏠 На главную
+                    </a>
+                    <a href="products.php" class="btn btn-outline">
+                        🛒 К товарам
+                    </a>
+                    <button onclick="history.back()" class="btn btn-outline">
+                        ↩️ Назад
+                    </button>
+                </div>
+                
+                <div class="suggestions">
+                    <h3>Возможно, вы искали:</h3>
+                    <ul class="suggestions-list">
+                        <li><a href="products.php">Каталог товаров</a></li>
+                        <li><a href="cart.php">Корзина покупок</a></li>
+                        <?php if (isLoggedIn()): ?>
+                            <li><a href="profile.php">Личный кабинет</a></li>
+                        <?php else: ?>
+                            <li><a href="login.php">Вход в систему</a></li>
+                            <li><a href="register.php">Регистрация</a></li>
+                        <?php endif; ?>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -52,8 +79,11 @@ require_once '../includes/config.php';
             <div class="footer-section">
                 <h3>Категории</h3>
                 <ul>
-                    <?php foreach (getAllCategories($db) as $category): ?>
-                    <li><a href="pages/products.php?category=<?php echo $category['id']; ?>"><?php echo htmlspecialchars($category['name']); ?></a></li>
+                    <?php 
+                    $categories = getAllCategories($db);
+                    foreach ($categories as $category): 
+                    ?>
+                    <li><a href="products.php?category=<?php echo $category['id']; ?>"><?php echo htmlspecialchars($category['name']); ?></a></li>
                     <?php endforeach; ?>
                 </ul>
             </div>
@@ -67,8 +97,14 @@ require_once '../includes/config.php';
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 BuyBit. Все права защищены. Курсовой проект по веб-разработке.</p>
+            <p>&copy; 2024 BuyBit. Все права защищены. Курсовой проект по веб-разработке.</p>
         </div>
     </footer>
+
+    <script>
+    setTimeout(() => {
+        window.location.href = '../index.php';
+    }, 30000);
+    </script>
 </body>
 </html>

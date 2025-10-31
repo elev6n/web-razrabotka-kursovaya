@@ -1,4 +1,39 @@
 <?php
+$request_uri = $_SERVER['REQUEST_URI'];
+$script_name = $_SERVER['SCRIPT_NAME'];
+
+$clean_uri = strtok($request_uri, '?');
+
+if ($clean_uri != '/' && !file_exists(ltrim($clean_uri, '/'))) {
+    $possible_pages = [
+        '/index.php',
+        '/pages/products.php',
+        '/pages/product.php',
+        '/pages/cart.php',
+        '/pages/checkout.php',
+        '/pages/order_success.php',
+        '/pages/order_details.php',
+        '/pages/login.php',
+        '/pages/register.php',
+        '/pages/profile.php',
+        '/pages/404.php'
+    ];
+    
+    $is_valid_page = false;
+    foreach ($possible_pages as $page) {
+        if (strpos($clean_uri, $page) !== false) {
+            $is_valid_page = true;
+            break;
+        }
+    }
+    
+    if (!$is_valid_page && $clean_uri != '/') {
+        header("HTTP/1.0 404 Not Found");
+        include 'pages/404.php';
+        exit;
+    }
+}
+
 require_once 'includes/config.php';
 
 $products = getAllProducts($db);

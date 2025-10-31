@@ -10,8 +10,7 @@ $order_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $order_items = getOrderDetails($db, $order_id, $_SESSION['user_id']);
 
 if (empty($order_items)) {
-    header("Location: profile.php?tab=orders");
-    exit;
+    redirectTo404();
 }
 
 $order = $order_items[0]; 

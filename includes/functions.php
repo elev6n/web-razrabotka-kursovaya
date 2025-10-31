@@ -288,4 +288,41 @@ function removeFromWishlist($product_id) {
     $_COOKIE['wishlist'] = json_encode($wishlist);
     return true;
 }
+
+function isValidProduct($db, $product_id) {
+    $query = "SELECT id FROM products WHERE id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $product_id);
+    $stmt->execute();
+    return $stmt->rowCount() > 0;
+}
+
+function isValidCategory($db, $category_id) {
+    $query = "SELECT id FROM categories WHERE id = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $category_id);
+    $stmt->execute();
+    return $stmt->rowCount() > 0;
+}
+
+function isValidOrder($db, $order_id, $user_id = null) {
+    $query = "SELECT id FROM orders WHERE id = :order_id";
+    if ($user_id) {
+        $query .= " AND user_id = :user_id";
+    }
+    
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':order_id', $order_id);
+    if ($user_id) {
+        $stmt->bindParam(':user_id', $user_id);
+    }
+    $stmt->execute();
+    return $stmt->rowCount() > 0;
+}
+
+function redirectTo404() {
+    header("HTTP/1.0 404 Not Found");
+    header("Location: /buybit/pages/404.php");
+    exit;
+}
 ?>

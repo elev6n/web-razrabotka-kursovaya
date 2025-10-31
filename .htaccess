@@ -1,0 +1,13 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ pages/404.php [L,QSA]
+
+<Files ~ "\.(env|json|config|sql|log)$">
+    Deny from all
+</Files>
+
+<Files ~ "(^|/)\.(git|htaccess)">
+    Deny from all
+</Files>
