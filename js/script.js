@@ -162,3 +162,110 @@ function showNotification(message, type = 'success') {
         }, 300);
     });
 }
+
+// Функции для работы с избранным
+function addToWishlist(productId) {
+    const formData = new FormData();
+    formData.append('action', 'add_to_wishlist');
+    formData.append('product_id', productId);
+
+    // Определяем правильный путь
+    let actionUrl = 'includes/wishlist_actions.php';
+    if (window.location.pathname.includes('/pages/')) {
+        actionUrl = '../includes/wishlist_actions.php';
+    }
+
+    fetch(actionUrl, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification(data.message || 'Товар добавлен в избранное!');
+        } else {
+            showNotification(data.message || 'Товар уже в избранном', 'info');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Ошибка при добавлении в избранное', 'error');
+    });
+}
+
+// Функции для работы с избранным
+function addToWishlist(productId) {
+    const formData = new FormData();
+    formData.append('action', 'add_to_wishlist');
+    formData.append('product_id', productId);
+
+    // Исправляем определение пути
+    let actionUrl;
+    if (window.location.pathname.includes('/pages/')) {
+        actionUrl = '../includes/wishlist_actions.php';
+    } else {
+        actionUrl = 'includes/wishlist_actions.php';
+    }
+
+    fetch(actionUrl, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            showNotification(data.message || 'Товар добавлен в избранное!');
+        } else {
+            showNotification(data.message || 'Товар уже в избранном', 'info');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Ошибка при добавлении в избранное', 'error');
+    });
+}
+
+function removeFromWishlist(productId) {
+    const formData = new FormData();
+    formData.append('action', 'remove_from_wishlist');
+    formData.append('product_id', productId);
+
+    // Исправляем определение пути
+    let actionUrl;
+    if (window.location.pathname.includes('/pages/')) {
+        actionUrl = '../includes/wishlist_actions.php';
+    } else {
+        actionUrl = 'includes/wishlist_actions.php';
+    }
+
+    fetch(actionUrl, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            showNotification(data.message || 'Товар удален из избранного');
+            // Обновляем список избранного
+            if (window.location.search.includes('tab=wishlist')) {
+                loadWishlist();
+            }
+        } else {
+            showNotification('Ошибка при удалении из избранного', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Ошибка при удалении из избранного', 'error');
+    });
+}

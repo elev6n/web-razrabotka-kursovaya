@@ -157,16 +157,16 @@ $similar_products = $similar_stmt->fetchAll(PDO::FETCH_ASSOC);
         addToCart(productId, parseInt(quantity));
     }
     
-    function addToWishlist(productId) {
-        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-        if (!wishlist.includes(productId)) {
-            wishlist.push(productId);
-            localStorage.setItem('wishlist', JSON.stringify(wishlist));
-            showNotification('Товар добавлен в избранное!');
-        } else {
-            showNotification('Товар уже в избранном', 'error');
-        }
-    }
+    // function addToWishlist(productId) {
+    //     let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    //     if (!wishlist.includes(productId)) {
+    //         wishlist.push(productId);
+    //         localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    //         showNotification('Товар добавлен в избранное!');
+    //     } else {
+    //         showNotification('Товар уже в избранном', 'error');
+    //     }
+    // }
     </script>
 </body>
 </html>

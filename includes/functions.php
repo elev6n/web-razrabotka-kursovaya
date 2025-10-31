@@ -239,4 +239,53 @@ function getOrderDetails($db, $order_id, $user_id = null) {
     
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function getWishlistProducts($db) {
+    if (!isset($_COOKIE['wishlist'])) {
+        return [];
+    }
+    
+    $wishlist = json_decode($_COOKIE['wishlist'], true);
+    if (empty($wishlist)) {
+        return [];
+    }
+    
+    $placeholders = str_repeat('?,', count($wishlist) - 1) . '?';
+    
+    $query = "SELECT p.*, c.name as category_name 
+              FROM products p 
+              LEFT JOIN categories c ON p.category_id = c.id 
+              WHERE p.id IN ($placeholders)";
+    
+    $stmt = $db->prepare($query);
+    $stmt->execute($wishlist);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function addToWishlist($product_id) {
+    $wishlist = json_decode($_COOKIE['wishlist'] ?? '[]', true) ?? [];
+    
+    if (!in_array($product_id, $wishlist)) {
+        $wishlist[] = $product_id;
+        setcookie('wishlist', json_encode($wishlist), time() + (86400 * 365), "/"); 
+        $_COOKIE['wishlist'] = json_encode($wishlist);
+        return true;
+    }
+    
+    return false;
+}
+
+function removeFromWishlist($product_id) {
+    $wishlist = json_decode($_COOKIE['wishlist'] ?? '[]', true) ?? [];
+    
+    $wishlist = array_filter($wishlist, function($id) use ($product_id) {
+        return $id != $product_id;
+    });
+    
+    $wishlist = array_values($wishlist);
+    
+    setcookie('wishlist', json_encode($wishlist), time() + (86400 * 365), "/");
+    $_COOKIE['wishlist'] = json_encode($wishlist);
+    return true;
+}
 ?>
