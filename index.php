@@ -18,7 +18,7 @@ $categories = getAllCategories($db);
         <nav>
             <div class="logo">BuyBit</div>
             <ul class="nav-links">
-                <li><a href="index.php">Главная</a></li>
+                <li><a href="index.php" class="active">Главная</a></li>
                 <li><a href="pages/products.php">Товары</a></li>
                 <li><a href="pages/cart.php">Корзина</a></li>
                 <?php if (isLoggedIn()): ?>
@@ -82,7 +82,7 @@ $categories = getAllCategories($db);
     </main>
 
     <footer>
-        <p>&copy; 2024 BuyBit. Все права защищены.</p>
+        <p>&copy; 2025 BuyBit. Все права защищены.</p>
     </footer>
 
     <script src="js/script.js"></script>

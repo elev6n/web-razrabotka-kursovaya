@@ -1,14 +1,12 @@
 <?php
 require_once '../includes/config.php';
 
-// Получаем параметры фильтрации
 $category_id = isset($_GET['category']) ? intval($_GET['category']) : null;
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
-$limit = 9; // Товаров на странице
+$limit = 9;
 $offset = ($page - 1) * $limit;
 
-// Получаем товары в зависимости от фильтров
 if (!empty($search)) {
     $products = searchProducts($db, $search);
     $total_products = count($products);
@@ -18,13 +16,11 @@ if (!empty($search)) {
     $total_products = count($products);
     $products = array_slice($products, $offset, $limit);
 } else {
-    // Получаем общее количество товаров для пагинации
     $count_query = "SELECT COUNT(*) as total FROM products";
     $count_stmt = $db->prepare($count_query);
     $count_stmt->execute();
     $total_products = $count_stmt->fetch(PDO::FETCH_ASSOC)['total'];
     
-    // Получаем товары для текущей страницы
     $query = "SELECT p.*, c.name as category_name 
               FROM products p 
               LEFT JOIN categories c ON p.category_id = c.id 
@@ -73,7 +69,6 @@ $total_pages = ceil($total_products / $limit);
         <div class="products-header">
             <h1>Каталог товаров</h1>
             
-            <!-- Поиск и фильтры -->
             <div class="filters">
                 <form method="GET" class="search-form">
                     <div class="search-box">
@@ -94,7 +89,6 @@ $total_pages = ceil($total_products / $limit);
             </div>
         </div>
 
-        <!-- Результаты поиска -->
         <?php if (!empty($search)): ?>
             <div class="search-results-info">
                 <h2>Результаты поиска: "<?php echo htmlspecialchars($search); ?>"</h2>
@@ -103,7 +97,6 @@ $total_pages = ceil($total_products / $limit);
             </div>
         <?php endif; ?>
 
-        <!-- Сетка товаров -->
         <div class="products-container">
             <?php if (empty($products)): ?>
                 <div class="no-products">
@@ -142,7 +135,6 @@ $total_pages = ceil($total_products / $limit);
                     <?php endforeach; ?>
                 </div>
 
-                <!-- Пагинация -->
                 <?php if ($total_pages > 1): ?>
                 <div class="pagination">
                     <?php if ($page > 1): ?>
@@ -170,7 +162,7 @@ $total_pages = ceil($total_products / $limit);
     </main>
     
     <footer>
-        <p>&copy; 2024 BuyBit. Все права защищены.</p>
+        <p>&copy; 2025 BuyBit. Все права защищены.</p>
     </footer>
 
     <script src="../js/script.js"></script>
@@ -178,7 +170,6 @@ $total_pages = ceil($total_products / $limit);
 </html>
 
 <?php
-// Функция для построения URL пагинации
 function buildPaginationUrl($page, $category_id, $search) {
     $params = [];
     if ($category_id) $params[] = "category=$category_id";

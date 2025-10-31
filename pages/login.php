@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </main>
 
     <footer>
-        <p>&copy; 2024 BuyBit. Все права защищены.</p>
+        <p>&copy; 2025 BuyBit. Все права защищены.</p>
     </footer>
 
     <script src="../js/auth.js"></script>

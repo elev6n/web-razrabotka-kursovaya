@@ -43,6 +43,11 @@ nav {
     transition: color 0.3s;
 }
 
+.nav-links a.active {
+    color: #3498db;
+    font-weight: bold;
+}
+
 .nav-links a:hover {
     color: #3498db;
 }

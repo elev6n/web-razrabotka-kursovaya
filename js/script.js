@@ -1,68 +1,164 @@
 function addToCart(productId, quantity = 1) {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const button = event?.target;
+    if (button) {
+        const originalText = button.innerHTML;
+        button.innerHTML = 'Добавляем...';
+        button.disabled = true;
+        
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }, 1000);
+    }
 
-  const existingItem = cart.find((item) => item.id === productId);
+    const formData = new FormData();
+    formData.append('action', 'add_to_cart');
+    formData.append('product_id', productId);
+    formData.append('quantity', quantity);
 
-  if (existingItem) {
-    existingItem.quantity += quantity;
-  } else {
-    cart.push({
-      id: productId,
-      quantity: 1,
+    let actionUrl = 'includes/cart_actions.php';
+    if (window.location.pathname.includes('/pages/')) {
+        actionUrl = '../includes/cart_actions.php';
+    }
+
+    fetch(actionUrl, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateCartCounter(data.cart_count);
+            showNotification(data.message || 'Товар добавлен в корзину!');
+        } else {
+            showNotification(data.error || 'Ошибка при добавлении в корзину', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Ошибка при добавлении в корзину', 'error');
     });
-  }
-
-  localStorage.setItem("cart", JSON.stringify(cart));
-  updateCartCounter();
-  showNotification("Товар добавлен в корзину!");
 }
 
-function updateCartCounter() {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+function updateCartCounter(count = null) {
+    if (count === null) {
+        const formData = new FormData();
+        formData.append('action', 'get_cart_count');
+        
+        let actionUrl = 'includes/cart_actions.php';
+        if (window.location.pathname.includes('/pages/')) {
+            actionUrl = '../includes/cart_actions.php';
+        }
+        
+        fetch(actionUrl, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayCartCounter(data.cart_count);
+            }
+        })
+        .catch(error => {
+            console.error('Error getting cart count:', error);
+        });
+    } else {
+        displayCartCounter(count);
+    }
+}
 
+function syncLocalStorageWithServer() {
+    const formData = new FormData();
+    formData.append('action', 'get_cart_count');
+    
+    let actionUrl = 'includes/cart_actions.php';
+    if (window.location.pathname.includes('/pages/')) {
+        actionUrl = '../includes/cart_actions.php';
+    }
+    
+    fetch(actionUrl, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            localStorage.setItem('cart_count', data.cart_count.toString());
+        }
+    });
+}
+
+function displayCartCounter(count) {
   const counters = document.querySelectorAll(".cart-counter");
-  counters.forEach(counter => {
-    counter.textContent = `(${totalItems})`;
+  counters.forEach((counter) => {
+    counter.textContent = `(${count})`;
   });
 
   if (counters.length === 0) {
     const cartLinks = document.querySelectorAll('a[href*="cart.php"]');
-    cartLinks.forEach(link => {
-      if (!link.querySelector('.cart-counter')) {
-        const counter = document.createElement('span');
-        counter.className = 'cart-counter';
-        counter.textContent = `(${totalItems})`;
-        counter.style.cssText = 'color: #e74c3c; font-weight: bold; margin-left: 0.25rem;';
-        link.appendChild(counter)
+    cartLinks.forEach((link) => {
+      let counter = link.querySelector(".cart-counter");
+      if (!counter) {
+        counter = document.createElement("span");
+        counter.className = "cart-counter";
+        counter.style.cssText =
+          "color: #e74c3c; font-weight: bold; margin-left: 0.25rem;";
+        link.appendChild(counter);
       }
-    })
+      counter.textContent = `(${count})`;
+    });
   }
 }
 
-function showNotification(message, type = "success") {
-  const notification = document.createElement("div");
-  notification.className = `notification notification-${type}`;
-  notification.textContent = message;
-  notification.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: ${type === "success" ? "#2ecc71" : "#e74c3c"};
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 4px;
-    z-index: 1000,
-    animation: slineIn 0.3s ease;
-  `;
+function showNotification(message, type = 'success') {
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
 
-  document.body.appendChild(notification);
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    
+    const icon = type === 'success' ? '✅' : '❌';
+    notification.innerHTML = `
+        <span class="notification-icon">${icon}</span>
+        <span class="notification-text">${message}</span>
+    `;
+    
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#2ecc71' : '#e74c3c'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-width: 300px;
+        max-width: 500px;
+    `;
 
-  setTimeout(() => {
-    notification.remove();
-  }, 3000);
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 300);
+    }, 3000);
+    
+    notification.addEventListener('click', () => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 300);
+    });
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-  updateCartCounter();
-});

@@ -14,7 +14,6 @@ if (!$product) {
     exit;
 }
 
-// Получаем похожие товары
 $similar_products_query = "SELECT p.*, c.name as category_name 
                            FROM products p 
                            LEFT JOIN categories c ON p.category_id = c.id 
@@ -114,7 +113,6 @@ $similar_products = $similar_stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <!-- Похожие товары -->
         <?php if (!empty($similar_products)): ?>
         <section class="similar-products">
             <h2>Похожие товары</h2>
@@ -149,7 +147,7 @@ $similar_products = $similar_stmt->fetchAll(PDO::FETCH_ASSOC);
     </main>
     
     <footer>
-        <p>&copy; 2024 BuyBit. Все права защищены.</p>
+        <p>&copy; 2025 BuyBit. Все права защищены.</p>
     </footer>
 
     <script src="../js/script.js"></script>
